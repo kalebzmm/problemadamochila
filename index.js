@@ -1,16 +1,9 @@
 
-// https://stackoverflow.com/questions/19543514/check-whether-an-array-exists-in-an-array-of-arrays
-function searchForArray(haystack, needle){
-	var i, j, current;
-	for(i = 0; i < haystack.length; ++i){
-	  if(needle.length === haystack[i].length){
-		current = haystack[i];
-		for(j = 0; j < needle.length && needle[j] === current[j]; ++j);
-		if(j === needle.length)
-		  return i;
-	  }
+function arrayContains(arr, el){
+	for(let item of arr){
+		if(item.length === el.length && item.every(function(value, index) { return value === el[index]})) return true
 	}
-	return -1;
+	return false
 }
 
 // https://helloacm.com/the-enumerate-function-in-javascript/
@@ -188,7 +181,7 @@ let Knapsack = class Knapsack{
 			newparents[i] = this.mutation(newparents[i])	
 		}
 
-		if (searchForArray(newparents,this.opt)){
+		if (arrayContains(newparents, this.opt)){
 			console.log(`achado depois de ${this.iterated} gerações`)
 			return;
 		}else{
