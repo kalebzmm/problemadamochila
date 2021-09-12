@@ -1,4 +1,19 @@
 
+// https://stackoverflow.com/questions/19543514/check-whether-an-array-exists-in-an-array-of-arrays
+function searchForArray(haystack, needle){
+	var i, j, current;
+	for(i = 0; i < haystack.length; ++i){
+	  if(needle.length === haystack[i].length){
+		current = haystack[i];
+		for(j = 0; j < needle.length && needle[j] === current[j]; ++j);
+		if(j === needle.length)
+		  return i;
+	  }
+	}
+	return -1;
+}
+
+// https://helloacm.com/the-enumerate-function-in-javascript/
 function *enumerate(array) {
 	for (let i = 0; i < array.length; i += 1) {
 		yield [i, array[i]];
@@ -127,8 +142,6 @@ let Knapsack = class Knapsack{
 	// crossover two parents to produce two children by miixing them under random ration each time
 	crossover(ch1, ch2){
 
-		console.log(ch1, ch2)
-
 		let threshold = Math.floor(Math.random() * ch1.length) + 1
 		let tmp1 = ch1.slice(threshold)
 		let tmp2 = ch2.slice(threshold)
@@ -136,8 +149,6 @@ let Knapsack = class Knapsack{
 		ch2 = ch2.slice(0, threshold)
 		ch1.push(...tmp2)
 		ch2.push(...tmp1)
-
-		console.log(ch1, ch2);
 
 		return [ch1, ch2]
 
@@ -159,12 +170,10 @@ let Knapsack = class Knapsack{
 		}
 		for (let i of Array.from(Array(pop).keys())){
 
-			// console.log(this.best_p)
 			// select the random index of best children to randomize the process
 			if (i < pop - 1){
 				r1 = this.best_p[i]
 				r2 = this.best_p[i+1]
-				console.log(r1, r2)
 				v = this.crossover(r1, r2)
 				nchild1 = v[0], nchild2 = v[1]
 				newparents.push(nchild1)
@@ -184,11 +193,12 @@ let Knapsack = class Knapsack{
 			newparents[i] = this.mutation(newparents[i])	
 		}
 
-		if (newparents.includes(this.opt)){
-			console.log(`optimal found in ${this.iterated} generations`)
+		if (searchForArray(newparents,this.opt)){
+			console.log(`achado depois de ${this.iterated} gerações`)
+			return;
 		}else{
 			this.iterated += 1
-			console.log(`recreate generations for ${this.iterated} time`)
+			console.log(`recriando gerações pela ${this.iterated} vez`)
 			this.parents = newparents
 			this.bests = []
 			this.best_p = []
