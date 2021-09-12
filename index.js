@@ -52,7 +52,7 @@ let Knapsack = class Knapsack{
 	}
 
 	// define os dados do problema
-	properties(pesos, pontos_sobrevivencia, correto, C, populacao){
+	properties(pesos, pontos_sobrevivencia, correto, capacidade, populacao){
 
 		this.weights = pesos
 		this.profits = pontos_sobrevivencia
@@ -203,13 +203,13 @@ let Knapsack = class Knapsack{
 
 }
 
-let pesos = [12,  7, 11, 8, 9]
-let pontos_sobrevivencia = [24, 13, 23, 15, 16]
-let correto = [0, 1, 1, 1, 0]
-let C = 26
-let qtd_populacao = 10
+let pesos = [12,  7, 11, 8, 9] // define os pesos de cada item
+let pontos_sobrevivencia = [24, 13, 23, 15, 16] // define os pontos de sobrevivência da cada item
+let correto = [0, 1, 1, 1, 0] // define o array "ótimo" que quando encontrado encerra a execução
+let capacidade = 30 // capacidade máxima da mochila
+let qtd_populacao = 10 // quantidade máxima de população de cada geração
 
 const mochila = new Knapsack()
-mochila.properties(pesos, pontos_sobrevivencia, correto, C, qtd_populacao)
+mochila.properties(pesos, pontos_sobrevivencia, correto, capacidade, qtd_populacao)
 mochila.run()
 
