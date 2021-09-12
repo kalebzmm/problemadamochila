@@ -1,4 +1,10 @@
 
+function *enumerate(array) {
+	for (let i = 0; i < array.length; i += 1) {
+		yield [i, array[i]];
+	}
+}
+
 let Knapsack = class Knapsack{
 
 	// inicializa as variáveis
@@ -52,9 +58,8 @@ let Knapsack = class Knapsack{
 
 		let sum_w = 0
 		let sum_p = 0
-
 		// get weights and profits
-		for ([index, i] in item.entries()){
+		for (let [index, i] of enumerate(item)){
 			if (i == 0){
 				continue
 			}else{
@@ -78,20 +83,21 @@ let Knapsack = class Knapsack{
 
 		// loop through parents and calculate fitness
 		let parent, ft;
-		let best_pop = this.population // 2
+		let best_pop = Math.floor(this.population/2)
 		for (let i in Array.from(Array(this.parents.length).keys())){
 			parent = this.parents[i]
 			ft = this.fitness(parent)
-			this.bests.push((ft, parent))
+			this.bests.push([ft, parent])
 		}
 
 		// sort the fitness list by fitness		
 		this.bests.sort(function(a, b) {
 			return b[0] - a[0];
 		});
-		this.best_p = this.bests.slice(0,)
+
+		this.best_p = this.bests.slice(0,best_pop)
 		let arr = []
-		for(x in Array.from(Array().keys(this.best_p.length))){
+		for(let x of this.best_p){
 			arr.push(x[1])
 		}
 		this.best_p = arr
@@ -101,7 +107,8 @@ let Knapsack = class Knapsack{
 	// mutate children after certain condition
 	mutation(ch){
 
-		for (let i in Array.from(Array(this.population.ch.length).keys())){
+		let k
+		for (let i of Array.from(Array(ch.length).keys())){
 			k = Math.random() < 0.5 ? 0 : 1
 			if (k > 0.5){
 				// if random float number greater that 0.5 flip 0 with 1 and vice versa
@@ -120,15 +127,19 @@ let Knapsack = class Knapsack{
 	// crossover two parents to produce two children by miixing them under random ration each time
 	crossover(ch1, ch2){
 
-		threshold = Math.floor(Math.random() * ch1.length) + 1
-		tmp1 = ch1.slice(threshold)
-		tmp2 = ch2.slice(threshold)
+		console.log(ch1, ch2)
+
+		let threshold = Math.floor(Math.random() * ch1.length) + 1
+		let tmp1 = ch1.slice(threshold)
+		let tmp2 = ch2.slice(threshold)
 		ch1 = ch1.slice(0, threshold)
 		ch2 = ch2.slice(0, threshold)
 		ch1.push(...tmp2)
 		ch2.push(...tmp1)
 
-		return ch1, ch2
+		console.log(ch1, ch2);
+
+		return [ch1, ch2]
 
 	}
 
@@ -140,25 +151,29 @@ let Knapsack = class Knapsack{
 		let newparents = []
 		let pop = this.best_p.length - 1
 		let sample = []
+		let r1, r2, nchild1, nchild2, v
 
 		// create a list with unique random integers
-		console.log(pop)
-		for(x in Array.from(Array(pop).keys())){
+		for(let x in Array.from(Array(pop).keys())){
 			sample.push(Math.floor(Math.random() * (pop - 0 + 1) + 0))
 		}
-		for (let i in Array.from(Array(pop).keys())){
+		for (let i of Array.from(Array(pop).keys())){
 
+			// console.log(this.best_p)
 			// select the random index of best children to randomize the process
 			if (i < pop - 1){
 				r1 = this.best_p[i]
 				r2 = this.best_p[i+1]
-				nchild1, nchild2 = this.crossover(r1, r2)
+				console.log(r1, r2)
+				v = this.crossover(r1, r2)
+				nchild1 = v[0], nchild2 = v[1]
 				newparents.push(nchild1)
 				newparents.push(nchild2)
 			}else{
 				r1 = this.best_p[i]
 				r2 = this.best_p[0]
-				nchild1, nchild2 = this.crossover(r1, r2)
+				v = this.crossover(r1, r2)
+				nchild1 = v[0], nchild2 = v[1]
 				newparents.push(nchild1)
 				newparents.push(nchild2)
 			}
@@ -169,7 +184,7 @@ let Knapsack = class Knapsack{
 			newparents[i] = this.mutation(newparents[i])	
 		}
 
-		if (this.opt in Array.from(Array(newparents.length).keys())){
+		if (newparents.includes(this.opt)){
 			console.log(`optimal found in ${this.iterated} generations`)
 		}else{
 			this.iterated += 1
@@ -191,7 +206,7 @@ let opt = [0, 1, 1, 1, 0]
 let C = 26
 let population = 10
 
-const k = new Knapsack()
-k.properties(weights, profits, opt, C, population)
-k.run()
+const mochila = new Knapsack()
+mochila.properties(weights, profits, opt, C, population)
+mochila.run()
 
