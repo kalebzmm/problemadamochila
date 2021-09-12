@@ -1,3 +1,9 @@
+/*
+	Créditos a @Pantzan
+	Tradução do código do @Pantzan em Python para JS com o objetivo de
+	entender melhor o algoritmo genético com o problema da mochila (Knapsack Problem)
+	Repositório do código em Python https://github.com/Pantzan/KnapsackGA/
+ */
 
 function arrayContains(arr, el){
 	for(let item of arr){
