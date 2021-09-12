@@ -36,10 +36,6 @@ let Knapsack = class Knapsack{
 		this.iterated = 1
 		this.population = 0
 
-		// increase max recursion for long stack
-		// iMaxStackSize = 15000
-		// sys.setrecursionlimit(iMaxStackSize)
-
 	}
 
 	// cria uma população inicial 
@@ -57,13 +53,13 @@ let Knapsack = class Knapsack{
 	}
 
 	// define os dados do problema
-	properties(weights, profits, opt, C, population){
+	properties(pesos, pontos_sobrevivencia, correto, C, populacao){
 
-		this.weights = weights
-		this.profits = profits
-		this.opt = opt
+		this.weights = pesos
+		this.profits = pontos_sobrevivencia
+		this.opt = correto
 		this.C = C
-		this.population = population
+		this.population = populacao
 		this.initialize()
 
 	}
@@ -73,7 +69,7 @@ let Knapsack = class Knapsack{
 
 		let sum_w = 0
 		let sum_p = 0
-		// get weights and profits
+		// pega os pesos e os pontos de sobrevivência
 		for (let [index, i] of enumerate(item)){
 			if (i == 0){
 				continue
@@ -93,10 +89,10 @@ let Knapsack = class Knapsack{
 
 	}
 
-	// run generations of GA
+	// incia as gerações de algoritmo genético
 	evaluation(){
 
-		// loop through parents and calculate fitness
+		// itera pela população e calcula a aptidão
 		let parent, ft;
 		let best_pop = Math.floor(this.population/2)
 		for (let i in Array.from(Array(this.parents.length).keys())){
@@ -105,7 +101,7 @@ let Knapsack = class Knapsack{
 			this.bests.push([ft, parent])
 		}
 
-		// sort the fitness list by fitness		
+		// ordena a lista dos melhores pela aptidão		
 		this.bests.sort(function(a, b) {
 			return b[0] - a[0];
 		});
@@ -119,14 +115,13 @@ let Knapsack = class Knapsack{
 
 	}
 
-	// mutate children after certain condition
+	// faz a mutação
 	mutation(ch){
 
 		let k
 		for (let i of Array.from(Array(ch.length).keys())){
-			k = Math.random() < 0.5 ? 0 : 1
+			k = Math.random()
 			if (k > 0.5){
-				// if random float number greater that 0.5 flip 0 with 1 and vice versa
 				if (ch[i] == 1){
 					ch[i] = 0
 				}else{
@@ -139,7 +134,7 @@ let Knapsack = class Knapsack{
 
 	}
 
-	// crossover two parents to produce two children by miixing them under random ration each time
+	// cruza dois pais para produzir dois filhos
 	crossover(ch1, ch2){
 
 		let threshold = Math.floor(Math.random() * ch1.length) + 1
@@ -154,23 +149,23 @@ let Knapsack = class Knapsack{
 
 	}
 
-	// run the GA algorithm
+	// inicia o algoritmo genético
 	run(){
 
-		// run the evaluation once
+		// faz a avaliação
 		this.evaluation()
 		let newparents = []
 		let pop = this.best_p.length - 1
 		let sample = []
 		let r1, r2, nchild1, nchild2, v
 
-		// create a list with unique random integers
+		// cria um array de 0 e 1 aleatórios
 		for(let x in Array.from(Array(pop).keys())){
 			sample.push(Math.floor(Math.random() * (pop - 0 + 1) + 0))
 		}
 		for (let i of Array.from(Array(pop).keys())){
 
-			// select the random index of best children to randomize the process
+			// selecione o index aleatório dos melhores filhos para randomizar o processo
 			if (i < pop - 1){
 				r1 = this.best_p[i]
 				r2 = this.best_p[i+1]
@@ -188,7 +183,7 @@ let Knapsack = class Knapsack{
 			}
 		}
 
-		// mutate the new children and potential parents to ensure global optima found
+		// faz a mutação das novas crianças e pais em potencial
 		for (let i in Array.from(Array(newparents.length).keys())){
 			newparents[i] = this.mutation(newparents[i])	
 		}
@@ -209,14 +204,13 @@ let Knapsack = class Knapsack{
 
 }
 
-// properties for this particular problem
-let weights = [12,  7, 11, 8, 9]
-let profits = [24, 13, 23, 15, 16]
-let opt = [0, 1, 1, 1, 0]
+let pesos = [12,  7, 11, 8, 9]
+let pontos_sobrevivencia = [24, 13, 23, 15, 16]
+let correto = [0, 1, 1, 1, 0]
 let C = 26
-let population = 10
+let qtd_populacao = 10
 
 const mochila = new Knapsack()
-mochila.properties(weights, profits, opt, C, population)
+mochila.properties(pesos, pontos_sobrevivencia, correto, C, qtd_populacao)
 mochila.run()
 
