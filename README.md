@@ -11,7 +11,7 @@ Para o desenvolvimento, certifique-se de ter instalado o Node.js. Nenhum pacote 
 
 Altere as seguintes variáveis se necessário:
 
- ```
+ ```javascript
     let pesos = [12,  7, 11, 8, 9] // define os pesos de cada item
     let pontos_sobrevivencia = [24, 13, 23, 15, 16] // define os pontos de sobrevivência da cada item
     let correto = [0, 1, 1, 1, 0] // define o array "ótimo" que quando encontrado encerra a execução
