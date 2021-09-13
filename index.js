@@ -38,7 +38,7 @@ let Knapsack = class Knapsack{
 	}
 
 	// cria uma população inicial 
-	initialize(){
+	inicializar(){
 
 		for (let i in Array.from(Array(this.population).keys())){
 			let parent = []
@@ -52,19 +52,19 @@ let Knapsack = class Knapsack{
 	}
 
 	// define os dados do problema
-	properties(pesos, pontos_sobrevivencia, correto, capacidade, populacao){
+	propriedades(pesos, pontos_sobrevivencia, correto, capacidade, populacao){
 
 		this.weights = pesos
 		this.profits = pontos_sobrevivencia
 		this.opt = correto
-		this.C = C
+		this.C = capacidade
 		this.population = populacao
-		this.initialize()
+		this.inicializar()
 
 	}
 
 	// calcula a função de aptidão de cada lista
-	fitness(item){
+	aptidao(item){
 
 		let sum_w = 0
 		let sum_p = 0
@@ -89,14 +89,14 @@ let Knapsack = class Knapsack{
 	}
 
 	// incia as gerações de algoritmo genético
-	evaluation(){
+	evoluir(){
 
 		// itera pela população e calcula a aptidão
 		let parent, ft;
 		let best_pop = Math.floor(this.population/2)
 		for (let i in Array.from(Array(this.parents.length).keys())){
 			parent = this.parents[i]
-			ft = this.fitness(parent)
+			ft = this.aptidao(parent)
 			this.bests.push([ft, parent])
 		}
 
@@ -115,7 +115,7 @@ let Knapsack = class Knapsack{
 	}
 
 	// faz a mutação
-	mutation(ch){
+	mutacao(ch){
 
 		let k
 		for (let i of Array.from(Array(ch.length).keys())){
@@ -134,7 +134,7 @@ let Knapsack = class Knapsack{
 	}
 
 	// cruza dois pais para produzir dois filhos
-	crossover(ch1, ch2){
+	recombinar(ch1, ch2){
 
 		let threshold = Math.floor(Math.random() * ch1.length) + 1
 		let tmp1 = ch1.slice(threshold)
@@ -152,7 +152,7 @@ let Knapsack = class Knapsack{
 	run(){
 
 		// faz a avaliação
-		this.evaluation()
+		this.evoluir()
 		let newparents = []
 		let pop = this.best_p.length - 1
 		let sample = []
@@ -168,14 +168,14 @@ let Knapsack = class Knapsack{
 			if (i < pop - 1){
 				r1 = this.best_p[i]
 				r2 = this.best_p[i+1]
-				v = this.crossover(r1, r2)
+				v = this.recombinar(r1, r2)
 				nchild1 = v[0], nchild2 = v[1]
 				newparents.push(nchild1)
 				newparents.push(nchild2)
 			}else{
 				r1 = this.best_p[i]
 				r2 = this.best_p[0]
-				v = this.crossover(r1, r2)
+				v = this.recombinar(r1, r2)
 				nchild1 = v[0], nchild2 = v[1]
 				newparents.push(nchild1)
 				newparents.push(nchild2)
@@ -184,7 +184,7 @@ let Knapsack = class Knapsack{
 
 		// faz a mutação das novas crianças e pais em potencial
 		for (let i in Array.from(Array(newparents.length).keys())){
-			newparents[i] = this.mutation(newparents[i])	
+			newparents[i] = this.mutacao(newparents[i])	
 		}
 
 		if (arrayContains(newparents, this.opt)){
@@ -210,6 +210,6 @@ let capacidade = 30 // capacidade máxima da mochila
 let qtd_populacao = 10 // quantidade máxima de população de cada geração
 
 const mochila = new Knapsack()
-mochila.properties(pesos, pontos_sobrevivencia, correto, capacidade, qtd_populacao)
+mochila.propriedades(pesos, pontos_sobrevivencia, correto, capacidade, qtd_populacao)
 mochila.run()
 
